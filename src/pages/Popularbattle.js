@@ -7,8 +7,10 @@ export default class Popularbattle extends Component {
 
         this.state = {
             movies: [],
-            currentBattle: 0
+            currentBattle: 0,
+            favorites: []
         }
+        this.handleOnClick = this.handleOnClick.bind(this)
     }
 
 
@@ -21,6 +23,20 @@ export default class Popularbattle extends Component {
              console.log(data.results)
             this.setState({ movies: data.results})
         })
+    }
+
+    handleOnClick(currentBattle, id){
+        const Array = [...this.state.favorites, id]
+        this.setState ({
+            currentBattle: currentBattle + 2,
+            favorites: Array
+        })
+        localStorage.setItem("favorites", JSON.stringify(Array))
+        //console.log(localStorage)
+    }
+
+    handleClick(){
+        localStorage.clear()
     }
     render() {
         // this.state.movies[0] ([0][1] <- INDEX pour récupéré le 1er et le 2eme élément du tableau)
@@ -36,28 +52,36 @@ export default class Popularbattle extends Component {
                 <p>Pas de film</p>
             )
         }
-
+        
         return (
 
             // ici on a besoin d'afficher 2 éléments donc on affiche 2 Card [0]= 1er index [1]= 2eme index (1er et 2eme element du tableau)
             <div>
                 <h1>Popular battle</h1>
+                <button onClick={this.handleClick}>Remove localStorage item</button>
+                {this.state.movies.length !== 0 && <>
                 <Card
-                    titlemovie={this.state.movies[0].title}
-                    datemovie={this.state.movies[0].release_date}
+                        titlemovie={this.state.movies[0].title}
+                        datemovie={this.state.movies[0].release_date}
                         overviewmovie={this.state.movies[0].overview}
                         imagemovie={this.state.movies[0].poster_path}
-                    
-                />
+                        currentBattle={this.state.currentBattle}
+                        onClick={() => this.handleOnClick(this.state.currentBattle, this.state.movies.id)} />
+                
                 <Card
-                    titlemovie={this.state.movies[1].title}
-                    datemovie={this.state.movies[1].release_date}
-                        overviewmovie={this.state.movies[1].overview}
-                        imagemovie={this.state.movies[1].poster_path}
-                    
-                />
+                            titlemovie={this.state.movies[1].title}
+                            datemovie={this.state.movies[1].release_date}
+                            overviewmovie={this.state.movies[1].overview}
+                            imagemovie={this.state.movies[1].poster_path}
+                            currentBattle={this.state.currentBattle}
+                            onClick={() => this.handleOnClick(this.state.currentBattle, this.state.movies.currentBattle.id)} /></>
+                }
+
             </div>
+    
         )
     }
 }
+
+
 
